@@ -19,7 +19,7 @@ export const MODELS = {
 
 export const CLI = {
   COMMAND: "gemini",
-  SANDBOX_FLAG: "-s",
+  SANDBOX_FLAG: "--sandbox",
   MODEL_FLAG: "-m",
   PROMPT_FLAG: "-p",
 } as const;
