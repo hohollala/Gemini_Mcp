@@ -41,43 +41,142 @@ Claude Code에서 Gemini CLI와 상호작용할 수 있는 MCP(Model Context Pro
 
 ## 📖 사용법
 
-### 기본 사용법
+### 🚀 빠른 시작
 
-Claude Code에서 `/mcp` 명령으로 MCP 서버가 활성화되었는지 확인한 후:
+1. **프로젝트 클론**
+   ```bash
+   git clone https://github.com/hohollala/Gemini_Mcp.git
+   cd Gemini_Mcp
+   ```
 
+2. **의존성 설치**
+   ```bash
+   npm install
+   ```
+
+3. **빌드**
+   ```bash
+   npm run build
+   ```
+
+4. **Claude Code에 MCP 서버 추가**
+   ```bash
+   claude mcp add gemini-cli -- node dist/index.js
+   ```
+
+5. **사용 시작**
+   Claude Code에서 `/mcp` 명령으로 MCP 서버가 활성화되었는지 확인한 후 사용
+
+### 🔧 기본 사용법
+
+#### 1. 간단한 질문
 ```
 /ask-gemini "안녕하세요! 간단한 Python 함수를 작성해주세요."
 ```
 
-### 파일 분석
-
+#### 2. 파일 분석
 ```
 /ask-gemini "이 JavaScript 파일을 분석해주세요: @src/index.js"
 ```
 
-### 샌드박스 모드
+#### 3. 코드 리뷰
+```
+/ask-gemini "이 코드의 보안 취약점을 찾아주세요: @security.js"
+```
+
+#### 4. 문서 생성
+```
+/ask-gemini "이 API 코드에 대한 문서를 작성해주세요: @api.js"
+```
+
+### 🛡️ 샌드박스 모드
+
+안전한 코드 실행을 위한 격리된 환경에서 실행:
 
 ```
 /ask-gemini "샌드박스 모드에서 이 스크립트를 실행해주세요" --sandbox
 ```
 
-### 특정 모델 사용
+### 🤖 모델 선택
+
+특정 Gemini 모델을 사용하여 실행:
 
 ```
 /ask-gemini "복잡한 문제를 해결해주세요" --model "gemini-2.0-flash-exp"
 ```
 
-### 서버 상태 확인
+사용 가능한 모델:
+- `gemini-2.0-flash-exp` (기본값, 빠르고 효율적)
+- `gemini-2.0-flash-exp` (고성능)
 
+### 🛠️ 유틸리티 명령어
+
+#### 서버 상태 확인
 ```
 /ping "테스트 메시지"
 ```
 
-### 도움말
-
+#### 도움말 보기
 ```
 /help
 ```
+
+### 📁 파일 분석 예시
+
+#### JavaScript 파일 분석
+```
+/ask-gemini "이 React 컴포넌트의 성능을 개선해주세요: @components/UserList.jsx"
+```
+
+#### TypeScript 파일 분석
+```
+/ask-gemini "이 TypeScript 코드의 타입 안전성을 검토해주세요: @utils/validator.ts"
+```
+
+#### Python 파일 분석
+```
+/ask-gemini "이 Python 스크립트의 최적화 방안을 제안해주세요: @data_processor.py"
+```
+
+#### 설정 파일 분석
+```
+/ask-gemini "이 설정 파일의 문제점을 찾아주세요: @config.json"
+```
+
+### 🔍 고급 사용법
+
+#### 1. 복합 분석
+```
+/ask-gemini "이 프로젝트의 전체 구조를 분석하고 개선 방안을 제시해주세요: @src/ @tests/ @docs/"
+```
+
+#### 2. 코드 리팩토링
+```
+/ask-gemini "이 함수를 더 읽기 쉽게 리팩토링해주세요: @utils/helper.js"
+```
+
+#### 3. 테스트 코드 생성
+```
+/ask-gemini "이 함수에 대한 단위 테스트를 작성해주세요: @services/auth.js"
+```
+
+#### 4. 문서화
+```
+/ask-gemini "이 클래스에 대한 JSDoc 문서를 작성해주세요: @models/User.js"
+```
+
+### ⚡ 실시간 기능
+
+- **진행 상황 표시**: 긴 작업 중 실시간으로 진행 상황을 확인할 수 있습니다
+- **실시간 출력**: 명령 실행 중 결과가 실시간으로 표시됩니다
+- **에러 처리**: 오류 발생 시 상세한 에러 메시지를 제공합니다
+
+### 🎯 사용 팁
+
+1. **구체적인 질문**: "이 코드를 개선해주세요"보다는 "이 함수의 성능을 개선해주세요"가 더 좋습니다
+2. **파일 경로**: `@filename` 구문을 사용하여 정확한 파일을 지정하세요
+3. **샌드박스 모드**: 실행 가능한 코드를 테스트할 때는 샌드박스 모드를 사용하세요
+4. **모델 선택**: 복잡한 분석에는 고성능 모델을, 간단한 질문에는 기본 모델을 사용하세요
 
 ## 🏗️ 프로젝트 구조
 
