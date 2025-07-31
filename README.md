@@ -25,93 +25,60 @@ Claude Code에서 Gemini CLI와 상호작용할 수 있는 MCP(Model Context Pro
 
 ## 🛠️ 설치
 
-### 방법 1: 로컬 개발 버전 전역 설치 (현재 권장)
+### 방법 1: 간단한 글로벌 설치
 
 ```bash
-# 프로젝트 클론 및 빌드
+# 프로젝트 클론
 git clone https://github.com/hohollala/Gemini_Mcp.git
 cd Gemini_Mcp
-npm install
-npm run build
 
-# 명령어 파일 생성
-npm run generate-commands
+# 한 번에 설치 및 설정
+npm install && npm run build && npm run generate-commands && npm install -g .
 
-# npm 전역 설치
-npm install -g .
-
-# 홈 디렉토리에서 MCP 서버 등록
-cd ~
-claude mcp add gemini-mcp -- gemini-mcp
+# MCP 서버 등록
+cd ~ && claude mcp add gemini-mcp -- gemini-mcp
 ```
 
-### 방법 2: npm을 통한 글로벌 설치 (npm 배포 후 사용 가능)
+### 방법 2: 윈도우용 설치
 
 ```bash
-# npm을 통한 글로벌 설치 (npm 배포 후)
-npm install -g gemini-mcp
+# 프로젝트 클론
+git clone https://github.com/hohollala/Gemini_Mcp.git
+cd Gemini_Mcp
 
-# 홈 디렉토리에서 MCP 서버 등록
-cd ~
-claude mcp add gemini-mcp -- gemini-mcp
+# 윈도우용 설치 및 설정
+npm install && npm run build && npm run generate-commands && npm install -g .
+
+# 윈도우용 MCP 서버 등록 (절대 경로 사용)
+claude mcp add gemini-mcp -- "C:\\Users\\%USERNAME%\\AppData\\Roaming\\npm\\gemini-mcp.cmd"
 ```
 
-### 방법 3: 프로젝트별 설치 (기본)
+### 방법 3: 프로젝트별 설치
 
-1. **의존성 설치**
-   ```bash
-   npm install
-   ```
-
-2. **빌드**
-   ```bash
-   npm run build
-   ```
-
-3. **Claude Code에 MCP 서버 추가**
-   ```bash
-   claude mcp add gemini-cli -- node dist/index.js
-   ```
+```bash
+npm install
+npm run build
+claude mcp add gemini-cli -- node dist/index.js
+```
 
 ## 📖 사용법
 
-### 🚀 빠른 시작 (로컬 개발 버전 전역 설치)
+### 🚀 빠른 시작
 
-1. **프로젝트 클론 및 빌드**
-   ```bash
-   git clone https://github.com/hohollala/Gemini_Mcp.git
-   cd Gemini_Mcp
-   npm install
-   npm run build
-   ```
+```bash
+# 1. 프로젝트 클론 및 설치
+git clone https://github.com/hohollala/Gemini_Mcp.git
+cd Gemini_Mcp
+npm install && npm run build && npm run generate-commands && npm install -g .
 
-2. **명령어 파일 생성**
-   ```bash
-   npm run generate-commands
-   ```
+# 2. MCP 서버 등록
+cd ~ && claude mcp add gemini-mcp -- gemini-mcp
 
-3. **전역 설치**
-   ```bash
-   # npm 전역 설치
-   npm install -g .
-   
-   # 홈 디렉토리로 이동하여 전역 MCP 서버 등록
-   cd ~
-   claude mcp add gemini-mcp -- gemini-mcp
-   ```
-
-4. **설치 확인**
-   ```bash
-   claude mcp list
-   ```
-
-5. **사용 시작**
-   이제 홈 디렉토리에서 다음 명령어를 사용할 수 있습니다:
-   ```
-   /gc-ask "질문을 입력하세요"
-   /gc-ping "테스트"
-   /gc-help
-   ```
+# 3. 사용 시작
+/gc-ask "질문을 입력하세요"
+/gc-ping "테스트"
+/gc-help
+```
 
 ### 🔧 기본 사용법
 
@@ -382,6 +349,39 @@ mkdir -p ~/.claude/commands/
 
 **참고**: 명령어 파일은 **수동으로 생성**해야 하며, `npm run generate-commands` 명령을 사용합니다.
 
+### 윈도우 특별 문제 해결
+
+#### 1. 윈도우에서 MCP 서버가 자동 실행되지 않는 경우
+```cmd
+# 1. 절대 경로로 MCP 서버 등록
+claude mcp add gemini-mcp -- "C:\\Users\\%USERNAME%\\AppData\\Roaming\\npm\\gemini-mcp.cmd"
+
+# 2. 또는 node 명령어로 직접 실행
+claude mcp add gemini-mcp -- "node C:\\Users\\%USERNAME%\\AppData\\Roaming\\npm\\node_modules\\gemini-mcp\\dist\\index.js"
+
+# 3. PowerShell에서 실행 권한 설정
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+#### 2. 윈도우에서 npm 글로벌 설치 경로 확인
+```cmd
+# npm 글로벌 설치 경로 확인
+npm config get prefix
+
+# 일반적으로 다음 경로 중 하나:
+# C:\Users\%USERNAME%\AppData\Roaming\npm
+# C:\Program Files\nodejs
+```
+
+#### 3. 윈도우 PATH 환경변수 확인
+```cmd
+# PATH에 npm 글로벌 경로가 포함되어 있는지 확인
+echo %PATH%
+
+# 필요시 PATH에 추가
+setx PATH "%PATH%;C:\Users\%USERNAME%\AppData\Roaming\npm"
+```
+
 ### npm install 에러 해결
 
 #### 1. Node.js 버전 확인
@@ -397,7 +397,13 @@ npm cache clean --force
 
 #### 3. node_modules 삭제 후 재설치
 ```bash
+# macOS/Linux
 rm -rf node_modules package-lock.json
+
+# Windows
+rmdir /s node_modules
+del package-lock.json
+
 npm install
 ```
 

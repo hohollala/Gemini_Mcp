@@ -5,15 +5,19 @@
   "main": "dist/index.js",
   "type": "module",
   "bin": {
-    "gemini-mcp": "./dist/index.js"
+    "gemini-mcp": "./dist/index.js",
+    "gemini-mcp.cmd": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
     "start": "node dist/index.js",
+    "start:win": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublishOnly": "npm run build",
-    "generate-commands": "node -e \"import('./dist/utils/commandFileGenerator.js').then(m => m.generateAllCommandFiles(process.cwd()))\""
+    "generate-commands": "node -e \"import('./dist/utils/commandFileGenerator.js').then(m => m.generateAllCommandFiles(process.cwd()))\"",
+    "postinstall": "npm run build && npm run generate-commands",
+    "postinstall:win": "npm run build && npm run generate-commands && copy dist\\index.cmd dist\\gemini-mcp.cmd"
   },
   "keywords": [
     "mcp",
