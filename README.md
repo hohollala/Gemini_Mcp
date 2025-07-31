@@ -35,8 +35,11 @@ cd Gemini_Mcp
 # 한 번에 설치 및 설정
 npm install && npm run build && npm run generate-commands && npm install -g .
 
-# MCP 서버 등록
-cd ~ && claude mcp add gemini-mcp -- gemini-mcp
+# MCP 서버 등록 (사용자 레벨)
+# Windows용:
+claude mcp add gemini-mcp -s user -- node dist/index.js
+# macOS/Linux용:
+claude mcp add gemini-mcp -s user -- node $(pwd)/dist/index.js
 ```
 
 ### 방법 2: 윈도우용 설치
@@ -49,8 +52,8 @@ cd Gemini_Mcp
 # 윈도우용 설치 및 설정
 npm install && npm run build && npm run generate-commands && npm install -g .
 
-# 윈도우용 MCP 서버 등록 (절대 경로 사용)
-claude mcp add gemini-mcp -- "C:\\Users\\%USERNAME%\\AppData\\Roaming\\npm\\gemini-mcp.cmd"
+# 윈도우용 MCP 서버 등록 (사용자 레벨, 절대 경로 사용)
+claude mcp add gemini-mcp -s user -- "C:\\Users\\%USERNAME%\\AppData\\Roaming\\npm\\gemini-mcp.cmd"
 ```
 
 ### 방법 3: 프로젝트별 설치
@@ -71,8 +74,11 @@ git clone https://github.com/hohollala/Gemini_Mcp.git
 cd Gemini_Mcp
 npm install && npm run build && npm run generate-commands && npm install -g .
 
-# 2. MCP 서버 등록
-cd ~ && claude mcp add gemini-mcp -- gemini-mcp
+# 2. MCP 서버 등록 (사용자 레벨)
+# Windows용:
+claude mcp add gemini-mcp -s user -- node dist/index.js
+# macOS/Linux용:
+claude mcp add gemini-mcp -s user -- node $(pwd)/dist/index.js
 
 # 3. 사용 시작
 /gc-ask "질문을 입력하세요"
@@ -306,10 +312,14 @@ brew install google-gemini/gemini/gemini
 ### 다른 폴더에서 MCP 서버가 보이지 않는 경우
 **문제**: 특정 프로젝트 폴더에서만 MCP 서버가 작동함
 
-**해결책**: 각 프로젝트에서 개별 등록
+**해결책**: 사용자 레벨로 등록
+
 ```bash
-# 각 프로젝트 폴더에서
-claude mcp add gemini-mcp -- gemini-mcp
+# 사용자 레벨로 등록 (모든 프로젝트에서 사용 가능)
+# Windows용:
+claude mcp add gemini-mcp -s user -- node dist/index.js
+# macOS/Linux용:
+claude mcp add gemini-mcp -s user -- node $(pwd)/dist/index.js
 ```
 
 ### 권한 오류
@@ -337,7 +347,7 @@ npm run generate-commands
 mkdir -p ~/.claude/commands/
 # gc-ask.md, gc-ping.md, gc-help.md 파일을 수동으로 생성
 ```
-
+claude mcp add  gemini-mcp -s user -- node dist/index.js
 ### 설치 과정 설명
 1. **프로젝트 클론**: GitHub에서 프로젝트를 다운로드합니다
 2. **의존성 설치**: `npm install`로 필요한 패키지를 설치합니다
@@ -353,11 +363,11 @@ mkdir -p ~/.claude/commands/
 
 #### 1. 윈도우에서 MCP 서버가 자동 실행되지 않는 경우
 ```cmd
-# 1. 절대 경로로 MCP 서버 등록
-claude mcp add gemini-mcp -- "C:\\Users\\%USERNAME%\\AppData\\Roaming\\npm\\gemini-mcp.cmd"
+# 1. 절대 경로로 MCP 서버 등록 (사용자 레벨)
+claude mcp add gemini-mcp -s user -- "C:\\Users\\%USERNAME%\\AppData\\Roaming\\npm\\gemini-mcp.cmd"
 
-# 2. 또는 node 명령어로 직접 실행
-claude mcp add gemini-mcp -- "node C:\\Users\\%USERNAME%\\AppData\\Roaming\\npm\\node_modules\\gemini-mcp\\dist\\index.js"
+# 2. 또는 node 명령어로 직접 실행 (사용자 레벨)
+claude mcp add gemini-mcp -s user -- "node C:\\Users\\%USERNAME%\\AppData\\Roaming\\npm\\node_modules\\gemini-mcp\\dist\\index.js"
 
 # 3. PowerShell에서 실행 권한 설정
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
