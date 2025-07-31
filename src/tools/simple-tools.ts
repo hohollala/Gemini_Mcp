@@ -7,7 +7,7 @@ const pingArgsSchema = z.object({
 });
 
 export const pingTool: UnifiedTool = {
-  name: "ping",
+  name: "gc-ping",
   description: "MCP 서버가 활성 상태인지 확인합니다.",
   zodSchema: pingArgsSchema,
   category: 'utility',
@@ -23,7 +23,7 @@ const helpArgsSchema = z.object({
 });
 
 export const helpTool: UnifiedTool = {
-  name: "help",
+  name: "gc-help",
   description: "사용 가능한 도구들의 도움말을 표시합니다.",
   zodSchema: helpArgsSchema,
   category: 'utility',
@@ -37,20 +37,20 @@ export const helpTool: UnifiedTool = {
     return `## 사용 가능한 도구들
 
 ### 🤖 Gemini 도구
-- **ask-gemini**: Gemini CLI를 통해 AI와 상호작용
+- **gc-ask**: Gemini CLI를 통해 AI와 상호작용
   - 프롬프트 분석, 파일 분석, 코드 실행 지원
   - 샌드박스 모드로 안전한 실행
   - 다양한 모델 선택 가능
 
 ### 🛠️ 유틸리티 도구
-- **ping**: MCP 서버 상태 확인
-- **help**: 도움말 표시
+- **gc-ping**: MCP 서버 상태 확인
+- **gc-help**: 도움말 표시
 
 ### 사용 예시
 \`\`\`
-/ask-gemini "이 코드를 분석해주세요: @filename.js"
-/ask-gemini "샌드박스 모드에서 이 스크립트를 실행해주세요" --sandbox
-/ping "테스트 메시지"
+/gc-ask "이 코드를 분석해주세요: @filename.js"
+/gc-ask "샌드박스 모드에서 이 스크립트를 실행해주세요" --sandbox
+/gc-ping "테스트 메시지"
 \`\`\``;
   }
 }; 

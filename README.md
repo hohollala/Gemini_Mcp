@@ -9,6 +9,7 @@ Claude Code에서 Gemini CLI와 상호작용할 수 있는 MCP(Model Context Pro
 - **파일 분석**: `@filename` 구문으로 파일 내용 분석
 - **샌드박스 모드**: 안전한 코드 실행 환경
 - **모델 선택**: 다양한 Gemini 모델 선택 가능
+- **글로벌 설치**: npm을 통한 전역 설치 지원
 
 ## 📋 전제 조건
 
@@ -23,6 +24,36 @@ Claude Code에서 Gemini CLI와 상호작용할 수 있는 MCP(Model Context Pro
    ```
 
 ## 🛠️ 설치
+
+### 방법 1: npm을 통한 글로벌 설치 (가장 권장)
+
+```bash
+# npm을 통한 글로벌 설치
+npm install -g gemini-mcp
+
+# 홈 디렉토리에서 MCP 서버 등록
+cd ~
+claude mcp add gemini-mcp -- gemini-mcp
+```
+
+### 방법 2: 로컬 개발 버전 전역 설치
+
+```bash
+# 프로젝트 클론 및 빌드
+git clone https://github.com/hohollala/Gemini_Mcp.git
+cd Gemini_Mcp
+npm install
+npm run build
+
+# npm 전역 설치
+npm install -g .
+
+# 홈 디렉토리에서 MCP 서버 등록
+cd ~
+claude mcp add gemini-mcp -- gemini-mcp
+```
+
+### 방법 3: 프로젝트별 설치 (기본)
 
 1. **의존성 설치**
    ```bash
@@ -41,52 +72,52 @@ Claude Code에서 Gemini CLI와 상호작용할 수 있는 MCP(Model Context Pro
 
 ## 📖 사용법
 
-### 🚀 빠른 시작
+### 🚀 빠른 시작 (npm 글로벌 설치)
 
-1. **프로젝트 클론**
+1. **npm을 통한 글로벌 설치**
    ```bash
-   git clone https://github.com/hohollala/Gemini_Mcp.git
-   cd Gemini_Mcp
+   npm install -g gemini-mcp
    ```
 
-2. **의존성 설치**
+2. **MCP 서버 등록**
    ```bash
-   npm install
+   cd ~
+   claude mcp add gemini-mcp -- gemini-mcp
    ```
 
-3. **빌드**
+3. **설치 확인**
    ```bash
-   npm run build
+   claude mcp list
    ```
 
-4. **Claude Code에 MCP 서버 추가**
-   ```bash
-   claude mcp add gemini-cli -- node dist/index.js
+4. **사용 시작**
+   이제 홈 디렉토리에서 다음 명령어를 사용할 수 있습니다:
    ```
-
-5. **사용 시작**
-   Claude Code에서 `/mcp` 명령으로 MCP 서버가 활성화되었는지 확인한 후 사용
+   /gc-ask "질문을 입력하세요"
+   /gc-ping "테스트"
+   /gc-help
+   ```
 
 ### 🔧 기본 사용법
 
 #### 1. 간단한 질문
 ```
-/ask-gemini "안녕하세요! 간단한 Python 함수를 작성해주세요."
+/gc-ask "안녕하세요! 간단한 Python 함수를 작성해주세요."
 ```
 
 #### 2. 파일 분석
 ```
-/ask-gemini "이 JavaScript 파일을 분석해주세요: @src/index.js"
+/gc-ask "이 JavaScript 파일을 분석해주세요: @src/index.js"
 ```
 
 #### 3. 코드 리뷰
 ```
-/ask-gemini "이 코드의 보안 취약점을 찾아주세요: @security.js"
+/gc-ask "이 코드의 보안 취약점을 찾아주세요: @security.js"
 ```
 
 #### 4. 문서 생성
 ```
-/ask-gemini "이 API 코드에 대한 문서를 작성해주세요: @api.js"
+/gc-ask "이 API 코드에 대한 문서를 작성해주세요: @api.js"
 ```
 
 ### 🛡️ 샌드박스 모드
@@ -94,7 +125,7 @@ Claude Code에서 Gemini CLI와 상호작용할 수 있는 MCP(Model Context Pro
 안전한 코드 실행을 위한 격리된 환경에서 실행:
 
 ```
-/ask-gemini "샌드박스 모드에서 이 스크립트를 실행해주세요" --sandbox
+/gc-ask "샌드박스 모드에서 이 스크립트를 실행해주세요" --sandbox
 ```
 
 ### 🤖 모델 선택
@@ -102,7 +133,7 @@ Claude Code에서 Gemini CLI와 상호작용할 수 있는 MCP(Model Context Pro
 특정 Gemini 모델을 사용하여 실행:
 
 ```
-/ask-gemini "복잡한 문제를 해결해주세요" --model "gemini-2.0-flash-exp"
+/gc-ask "복잡한 문제를 해결해주세요" --model "gemini-2.0-flash-exp"
 ```
 
 사용 가능한 모델:
@@ -113,56 +144,56 @@ Claude Code에서 Gemini CLI와 상호작용할 수 있는 MCP(Model Context Pro
 
 #### 서버 상태 확인
 ```
-/ping "테스트 메시지"
+/gc-ping "테스트 메시지"
 ```
 
 #### 도움말 보기
 ```
-/help
+/gc-help
 ```
 
 ### 📁 파일 분석 예시
 
 #### JavaScript 파일 분석
 ```
-/ask-gemini "이 React 컴포넌트의 성능을 개선해주세요: @components/UserList.jsx"
+/gc-ask "이 React 컴포넌트의 성능을 개선해주세요: @components/UserList.jsx"
 ```
 
 #### TypeScript 파일 분석
 ```
-/ask-gemini "이 TypeScript 코드의 타입 안전성을 검토해주세요: @utils/validator.ts"
+/gc-ask "이 TypeScript 코드의 타입 안전성을 검토해주세요: @utils/validator.ts"
 ```
 
 #### Python 파일 분석
 ```
-/ask-gemini "이 Python 스크립트의 최적화 방안을 제안해주세요: @data_processor.py"
+/gc-ask "이 Python 스크립트의 최적화 방안을 제안해주세요: @data_processor.py"
 ```
 
 #### 설정 파일 분석
 ```
-/ask-gemini "이 설정 파일의 문제점을 찾아주세요: @config.json"
+/gc-ask "이 설정 파일의 문제점을 찾아주세요: @config.json"
 ```
 
 ### 🔍 고급 사용법
 
 #### 1. 복합 분석
 ```
-/ask-gemini "이 프로젝트의 전체 구조를 분석하고 개선 방안을 제시해주세요: @src/ @tests/ @docs/"
+/gc-ask "이 프로젝트의 전체 구조를 분석하고 개선 방안을 제시해주세요: @src/ @tests/ @docs/"
 ```
 
 #### 2. 코드 리팩토링
 ```
-/ask-gemini "이 함수를 더 읽기 쉽게 리팩토링해주세요: @utils/helper.js"
+/gc-ask "이 함수를 더 읽기 쉽게 리팩토링해주세요: @utils/helper.js"
 ```
 
 #### 3. 테스트 코드 생성
 ```
-/ask-gemini "이 함수에 대한 단위 테스트를 작성해주세요: @services/auth.js"
+/gc-ask "이 함수에 대한 단위 테스트를 작성해주세요: @services/auth.js"
 ```
 
 #### 4. 문서화
 ```
-/ask-gemini "이 클래스에 대한 JSDoc 문서를 작성해주세요: @models/User.js"
+/gc-ask "이 클래스에 대한 JSDoc 문서를 작성해주세요: @models/User.js"
 ```
 
 ### ⚡ 실시간 기능
@@ -193,7 +224,8 @@ GeminiMCP/
 │   └── utils/
 │       ├── logger.ts         # 로깅 유틸리티
 │       ├── commandExecutor.ts # 명령어 실행
-│       └── geminiExecutor.ts # Gemini CLI 실행기
+│       ├── geminiExecutor.ts # Gemini CLI 실행기
+│       └── commandFileGenerator.ts # 명령어 파일 생성기
 ├── package.json
 ├── tsconfig.json
 └── README.md
@@ -220,7 +252,7 @@ npm start
 
 ### 1. 코드 분석
 ```
-사용자: /ask-gemini "이 React 컴포넌트의 성능을 개선해주세요: @components/UserList.jsx"
+사용자: /gc-ask "이 React 컴포넌트의 성능을 개선해주세요: @components/UserList.jsx"
 
 Gemini: 이 React 컴포넌트를 분석한 결과, 다음과 같은 성능 개선 사항을 제안합니다:
 1. React.memo를 사용한 메모이제이션
@@ -231,7 +263,7 @@ Gemini: 이 React 컴포넌트를 분석한 결과, 다음과 같은 성능 개�
 
 ### 2. 코드 생성
 ```
-사용자: /ask-gemini "TypeScript로 REST API 클라이언트를 만들어주세요"
+사용자: /gc-ask "TypeScript로 REST API 클라이언트를 만들어주세요"
 
 Gemini: TypeScript로 REST API 클라이언트를 생성하겠습니다:
 
@@ -259,7 +291,7 @@ class ApiClient {
 
 ### 3. 문제 해결
 ```
-사용자: /ask-gemini "이 에러를 해결해주세요: @error.log"
+사용자: /gc-ask "이 에러를 해결해주세요: @error.log"
 
 Gemini: 로그를 분석한 결과, 다음과 같은 문제를 발견했습니다:
 1. 메모리 부족 오류
@@ -289,10 +321,38 @@ brew install google-gemini/gemini/gemini
 2. `gemini --version` 명령으로 설치 확인
 3. 환경 변수 설정 확인
 
+### 다른 폴더에서 MCP 서버가 보이지 않는 경우
+**문제**: 특정 프로젝트 폴더에서만 MCP 서버가 작동함
+
+**해결책**: 각 프로젝트에서 개별 등록
+```bash
+# 각 프로젝트 폴더에서
+claude mcp add gemini-mcp -- gemini-mcp
+```
+
 ### 권한 오류
 ```bash
 # 실행 권한 부여
 chmod +x dist/index.js
+```
+
+### MCP 서버 제거
+```bash
+# 특정 MCP 서버 제거
+claude mcp remove gemini-mcp
+
+# 전역 npm 패키지 제거 (선택사항)
+npm uninstall -g gemini-mcp
+```
+
+### 명령어 파일이 생성되지 않는 경우
+```bash
+# MCP 서버를 직접 실행하여 명령어 파일 생성
+gemini-mcp
+
+# 또는 수동으로 명령어 파일 생성
+mkdir -p ~/.claude/commands/
+# gc-ask.md, gc-ping.md, gc-help.md 파일을 수동으로 생성
 ```
 
 ## 📄 라이선스

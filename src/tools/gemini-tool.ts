@@ -11,7 +11,7 @@ const geminiArgsSchema = z.object({
 });
 
 export const geminiTool: UnifiedTool = {
-  name: "ask-gemini",
+  name: "gc-ask",
   description: "Gemini CLI를 통해 AI와 상호작용합니다. 모델 선택, 샌드박스 모드, 파일 분석을 지원합니다.",
   zodSchema: geminiArgsSchema,
   prompt: {
