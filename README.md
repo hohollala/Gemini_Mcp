@@ -25,18 +25,7 @@ Claude Code에서 Gemini CLI와 상호작용할 수 있는 MCP(Model Context Pro
 
 ## 🛠️ 설치
 
-### 방법 1: npm을 통한 글로벌 설치 (가장 권장)
-
-```bash
-# npm을 통한 글로벌 설치
-npm install -g gemini-mcp
-
-# 홈 디렉토리에서 MCP 서버 등록
-cd ~
-claude mcp add gemini-mcp -- gemini-mcp
-```
-
-### 방법 2: 로컬 개발 버전 전역 설치
+### 방법 1: 로컬 개발 버전 전역 설치 (현재 권장)
 
 ```bash
 # 프로젝트 클론 및 빌드
@@ -47,6 +36,17 @@ npm run build
 
 # npm 전역 설치
 npm install -g .
+
+# 홈 디렉토리에서 MCP 서버 등록
+cd ~
+claude mcp add gemini-mcp -- gemini-mcp
+```
+
+### 방법 2: npm을 통한 글로벌 설치 (npm 배포 후 사용 가능)
+
+```bash
+# npm을 통한 글로벌 설치 (npm 배포 후)
+npm install -g gemini-mcp
 
 # 홈 디렉토리에서 MCP 서버 등록
 cd ~
@@ -72,15 +72,22 @@ claude mcp add gemini-mcp -- gemini-mcp
 
 ## 📖 사용법
 
-### 🚀 빠른 시작 (npm 글로벌 설치)
+### 🚀 빠른 시작 (로컬 개발 버전 전역 설치)
 
-1. **npm을 통한 글로벌 설치**
+1. **프로젝트 클론 및 빌드**
    ```bash
-   npm install -g gemini-mcp
+   git clone https://github.com/hohollala/Gemini_Mcp.git
+   cd Gemini_Mcp
+   npm install
+   npm run build
    ```
 
-2. **MCP 서버 등록**
+2. **전역 설치**
    ```bash
+   # npm 전역 설치
+   npm install -g .
+   
+   # 홈 디렉토리로 이동하여 전역 MCP 서버 등록
    cd ~
    claude mcp add gemini-mcp -- gemini-mcp
    ```
@@ -348,7 +355,7 @@ npm uninstall -g gemini-mcp
 ### 명령어 파일이 생성되지 않는 경우
 ```bash
 # npm 설치 시 자동으로 명령어 파일이 생성됩니다
-npm install -g gemini-mcp
+npm install -g .
 
 # 수동으로 명령어 파일 생성이 필요한 경우
 mkdir -p ~/.claude/commands/
@@ -356,9 +363,12 @@ mkdir -p ~/.claude/commands/
 ```
 
 ### 설치 과정 설명
-1. **npm install**: 패키지 설치와 함께 `postinstall` 스크립트가 실행되어 명령어 파일이 자동 생성됩니다
-2. **MCP 서버 등록**: `claude mcp add` 명령으로 MCP 서버를 등록합니다
-3. **사용 준비**: 명령어 파일이 `~/.claude/commands/`에 생성되어 Claude Code에서 사용할 수 있습니다
+1. **프로젝트 클론**: GitHub에서 프로젝트를 다운로드합니다
+2. **의존성 설치**: `npm install`로 필요한 패키지를 설치합니다
+3. **빌드**: `npm run build`로 TypeScript를 컴파일합니다
+4. **전역 설치**: `npm install -g .`로 글로벌에 설치하고 명령어 파일을 생성합니다
+5. **MCP 서버 등록**: `claude mcp add` 명령으로 MCP 서버를 등록합니다
+6. **사용 준비**: 명령어 파일이 `~/.claude/commands/`에 생성되어 Claude Code에서 사용할 수 있습니다
 
 **참고**: 명령어 파일은 **설치 시에만** 생성되며, MCP 서버 실행 시에는 생성되지 않습니다.
 
