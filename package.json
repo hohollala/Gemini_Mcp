@@ -13,7 +13,7 @@
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublishOnly": "npm run build",
-    "postinstall": "node -e \"import('./dist/utils/commandFileGenerator.js').then(m => m.generateAllCommandFiles(process.cwd()))\""
+    "generate-commands": "node -e \"import('./dist/utils/commandFileGenerator.js').then(m => m.generateAllCommandFiles(process.cwd()))\""
   },
   "keywords": [
     "mcp",

@@ -34,6 +34,9 @@ cd Gemini_Mcp
 npm install
 npm run build
 
+# 명령어 파일 생성
+npm run generate-commands
+
 # npm 전역 설치
 npm install -g .
 
@@ -82,7 +85,12 @@ claude mcp add gemini-mcp -- gemini-mcp
    npm run build
    ```
 
-2. **전역 설치**
+2. **명령어 파일 생성**
+   ```bash
+   npm run generate-commands
+   ```
+
+3. **전역 설치**
    ```bash
    # npm 전역 설치
    npm install -g .
@@ -92,12 +100,12 @@ claude mcp add gemini-mcp -- gemini-mcp
    claude mcp add gemini-mcp -- gemini-mcp
    ```
 
-3. **설치 확인**
+4. **설치 확인**
    ```bash
    claude mcp list
    ```
 
-4. **사용 시작**
+5. **사용 시작**
    이제 홈 디렉토리에서 다음 명령어를 사용할 수 있습니다:
    ```
    /gc-ask "질문을 입력하세요"
@@ -354,8 +362,9 @@ npm uninstall -g gemini-mcp
 
 ### 명령어 파일이 생성되지 않는 경우
 ```bash
-# npm 설치 시 자동으로 명령어 파일이 생성됩니다
-npm install -g .
+# 빌드 후 명령어 파일 생성
+npm run build
+npm run generate-commands
 
 # 수동으로 명령어 파일 생성이 필요한 경우
 mkdir -p ~/.claude/commands/
@@ -366,11 +375,59 @@ mkdir -p ~/.claude/commands/
 1. **프로젝트 클론**: GitHub에서 프로젝트를 다운로드합니다
 2. **의존성 설치**: `npm install`로 필요한 패키지를 설치합니다
 3. **빌드**: `npm run build`로 TypeScript를 컴파일합니다
-4. **전역 설치**: `npm install -g .`로 글로벌에 설치하고 명령어 파일을 생성합니다
-5. **MCP 서버 등록**: `claude mcp add` 명령으로 MCP 서버를 등록합니다
-6. **사용 준비**: 명령어 파일이 `~/.claude/commands/`에 생성되어 Claude Code에서 사용할 수 있습니다
+4. **명령어 파일 생성**: `npm run generate-commands`로 명령어 파일을 생성합니다
+5. **전역 설치**: `npm install -g .`로 글로벌에 설치합니다
+6. **MCP 서버 등록**: `claude mcp add` 명령으로 MCP 서버를 등록합니다
+7. **사용 준비**: 명령어 파일이 `~/.claude/commands/`에 생성되어 Claude Code에서 사용할 수 있습니다
 
-**참고**: 명령어 파일은 **설치 시에만** 생성되며, MCP 서버 실행 시에는 생성되지 않습니다.
+**참고**: 명령어 파일은 **수동으로 생성**해야 하며, `npm run generate-commands` 명령을 사용합니다.
+
+### npm install 에러 해결
+
+#### 1. Node.js 버전 확인
+```bash
+node --version  # v16.0.0 이상 필요
+npm --version
+```
+
+#### 2. 캐시 클리어
+```bash
+npm cache clean --force
+```
+
+#### 3. node_modules 삭제 후 재설치
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
+
+#### 4. 권한 문제 해결
+```bash
+# macOS/Linux
+sudo npm install
+
+# 또는 npm 권한 설정
+npm config set prefix ~/.npm-global
+export PATH=~/.npm-global/bin:$PATH
+```
+
+#### 5. 네트워크 문제 해결
+```bash
+# npm 레지스트리 확인
+npm config get registry
+
+# 필요시 레지스트리 변경
+npm config set registry https://registry.npmjs.org/
+```
+
+#### 6. TypeScript 컴파일 에러
+```bash
+# TypeScript 재설치
+npm install typescript --save-dev
+
+# 빌드 재시도
+npm run build
+```
 
 ## 📄 라이선스
 
