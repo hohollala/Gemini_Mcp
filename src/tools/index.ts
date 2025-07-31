@@ -3,6 +3,7 @@ import { registerTool, getAllTools, getToolByName } from './registry.js';
 import { geminiTool } from './gemini-tool.js';
 import { pingTool, helpTool } from './simple-tools.js';
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
+import { zodToJsonSchema } from 'zod-to-json-schema';
 
 // 모든 도구 등록
 registerTool(geminiTool);
@@ -18,8 +19,8 @@ export function getToolDefinitions(): Tool[] {
   return getAllTools().map(tool => ({
     name: tool.name,
     description: tool.description,
-    inputSchema: tool.zodSchema,
-  })) as unknown as Tool[];
+    inputSchema: zodToJsonSchema(tool.zodSchema),
+  })) as Tool[];
 }
 
 // 도구 존재 확인
