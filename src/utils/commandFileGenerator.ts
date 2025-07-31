@@ -17,17 +17,8 @@ export interface CommandDefinition {
 }
 
 export function generateCommandFile(command: CommandDefinition, projectRoot: string): void {
-  // 전역 명령어로 설치할 때는 ~/.claude/commands/ 폴더에 생성
-  const isGlobal = process.argv.includes('--global') || process.argv.includes('-g');
-  
-  let claudeDir: string;
-  if (isGlobal) {
-    // 전역 설치: ~/.claude/commands/ 폴더 사용
-    claudeDir = join(process.env.HOME || process.env.USERPROFILE || '', '.claude', 'commands');
-  } else {
-    // 프로젝트별 설치: 프로젝트의 .claude 폴더 사용
-    claudeDir = join(projectRoot, '.claude');
-  }
+  // 항상 ~/.claude/commands/ 폴더에 생성
+  const claudeDir = join(process.env.HOME || process.env.USERPROFILE || '', '.claude', 'commands');
   
   const commandFile = join(claudeDir, `${command.name}.md`);
 
@@ -78,9 +69,8 @@ ${command.prerequisites.map(prereq => `- ${prereq}`).join('\n')}
 }
 
 export function generateAllCommandFiles(projectRoot: string): void {
-  // 전역 명령어로 설치할 때는 projectRoot를 무시하고 전역 경로 사용
-  const isGlobal = process.argv.includes('--global') || process.argv.includes('-g');
-  const targetRoot = isGlobal ? (process.env.HOME || process.env.USERPROFILE || '') : projectRoot;
+  // 항상 홈 디렉토리를 기준으로 명령어 파일 생성
+  const targetRoot = process.env.HOME || process.env.USERPROFILE || '';
   
   const commands: CommandDefinition[] = [
     {
@@ -118,7 +108,6 @@ export function generateAllCommandFiles(projectRoot: string): void {
         '진행 상황 표시: 긴 작업 중 진행 상황 확인'
       ],
       prerequisites: [
-        'Node.js (v16.0.0 이상)',
         'Google Gemini CLI 설치 및 설정'
       ]
     },
@@ -129,7 +118,7 @@ export function generateAllCommandFiles(projectRoot: string): void {
       parameters: [
         {
           name: 'message',
-          description: '응답할 메시지 (기본값: "pong")',
+          description: '테스트 메시지 (선택사항)',
           required: false
         }
       ],
@@ -149,7 +138,7 @@ export function generateAllCommandFiles(projectRoot: string): void {
       parameters: [
         {
           name: 'tool',
-          description: '도움말을 볼 도구 이름',
+          description: '특정 도구의 도움말을 보려면 도구 이름을 입력',
           required: false
         }
       ],
@@ -163,11 +152,10 @@ export function generateAllCommandFiles(projectRoot: string): void {
       prerequisites: []
     }
   ];
-
+  
   commands.forEach(command => {
     generateCommandFile(command, targetRoot);
   });
-
-  const location = isGlobal ? 'global ~/.claude/commands directory' : '.claude directory';
-  Logger.info(`Generated ${commands.length} command files in ${location}`);
+  
+  Logger.info(`Generated ${commands.length} command files in ~/.claude/commands directory`);
 } 

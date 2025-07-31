@@ -256,12 +256,6 @@ async function main() {
   try {
     Logger.info("Gemini MCP 서버 시작 중...");
     
-    // 프로젝트 루트 경로 계산 (현재 작업 디렉토리 사용)
-    const projectRoot = process.cwd();
-    
-    // 명령어 파일 자동 생성
-    generateAllCommandFiles(projectRoot);
-    
     const transport = new StdioServerTransport();
     await server.connect(transport);
     
