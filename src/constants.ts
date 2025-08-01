@@ -12,9 +12,9 @@ export const STATUS_MESSAGES = {
 } as const;
 
 export const MODELS = {
-  DEFAULT: "gemini-2.0-flash-exp",
-  PRO: "gemini-2.0-flash-exp",
-  FLASH: "gemini-2.0-flash-exp",
+  DEFAULT: "gemini-2.5-flash",
+  PRO: "gemini-2.5-pro",
+  FLASH: "gemini-2.5-flash",
 } as const;
 
 export const CLI = {
@@ -22,6 +22,7 @@ export const CLI = {
   SANDBOX_FLAG: "--sandbox",
   MODEL_FLAG: "-m",
   PROMPT_FLAG: "-p",
+  AUTO_CONFIRM_FLAG: "-y",
 } as const;
 
 export const PROTOCOL = {

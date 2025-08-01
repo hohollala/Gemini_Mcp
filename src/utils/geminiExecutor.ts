@@ -17,6 +17,9 @@ export async function executeGeminiCLI(
   // 명령어 인수 구성
   const args: string[] = [];
   
+  // 자동 확인 플래그 추가 (대화형 모드 방지)
+  args.push(CLI.AUTO_CONFIRM_FLAG);
+  
   if (model) {
     args.push(CLI.MODEL_FLAG, model);
   }
@@ -46,6 +49,9 @@ export function buildGeminiCommand(
   sandbox: boolean = false
 ): string {
   const parts: string[] = [CLI.COMMAND];
+  
+  // 자동 확인 플래그 추가 (대화형 모드 방지)
+  parts.push(CLI.AUTO_CONFIRM_FLAG);
   
   if (model) {
     parts.push(CLI.MODEL_FLAG, model);
