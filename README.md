@@ -39,7 +39,7 @@ npm install && npm run build && npm run generate-commands && npm install -g .
 # Windows용: 파워쉘 
 claude mcp add gemini-mcp -s user -- node $PWD/dist/index.js
 # Windows용: CMD
-claude mcp addgemini-mcp -s user -- node [설치경로로]/dist/index.js
+claude mcp addgemini-mcp -s user -- node [설치경로]/dist/index.js
 # macOS/Linux용:
 claude mcp add gemini-mcp -s user -- node $(pwd)/dist/index.js
 ```

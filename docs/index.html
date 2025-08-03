@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini MCP Server - 사용 가이드</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --accent-primary: #00d4ff;
+            --accent-secondary: #ff0080;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --glow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 0, 128, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+        }
+
+        .section {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow), var(--glow);
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section h2::before {
+            content: '';
+            width: 4px;
+            height: 40px;
+            background: linear-gradient(180deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 2px;
+        }
+
+        .section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 30px 0 20px 0;
+            color: var(--accent-primary);
+        }
+
+        .section h4 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin: 25px 0 15px 0;
+            color: var(--text-primary);
+        }
+
+        .code-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+        }
+
+        .code-block code {
+            color: var(--accent-primary);
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+
+        .code-block:hover .copy-button {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .copy-button:hover {
+            background: var(--accent-secondary);
+            transform: scale(1.05);
+        }
+
+        .copy-button.copied {
+            background: #28a745;
+        }
+
+        .warning {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #ffc107;
+        }
+
+        .success {
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #28a745;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .tab {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .tab:hover {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--accent-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .feature-card h4 {
+            color: var(--accent-primary);
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section {
+                padding: 25px;
+            }
+            
+            .section h2 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 20px 15px;
+            }
+        }
+
+        /* 애니메이션 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .section:nth-child(2) { animation-delay: 0.1s; }
+        .section:nth-child(3) { animation-delay: 0.2s; }
+        .section:nth-child(4) { animation-delay: 0.3s; }
+        .section:nth-child(5) { animation-delay: 0.4s; }
+        .section:nth-child(6) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Gemini MCP Server</h1>
+            <p>Claude Desktop에서 Gemini AI의 강력한 기능을 활용하세요. 실시간 출력, 파일 분석, 샌드박스 모드 등 다양한 기능을 제공합니다.</p>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>🚀 빠른 시작</h2>
+                <p>아래 단계를 따라 Gemini MCP 서버를 설치하고 설정하세요.</p>
+                
+                                 <h3>1단계: 프로젝트 다운로드</h3>
+                 <div class="code-block">
+                     <button class="copy-button" onclick="copyToClipboard(this, 'git clone https://github.com/hohollala/Gemini_Mcp.git')">복사</button>
+git clone https://github.com/hohollala/Gemini_Mcp.git
+                 </div>
+
+                 <h3>2단계: 프로젝트 폴더로 이동</h3>
+                 <div class="code-block">
+                     <button class="copy-button" onclick="copyToClipboard(this, 'cd Gemini_Mcp')">복사</button>
+cd Gemini_Mcp
+                 </div>
+
+                 <h3>3단계: 의존성 설치</h3>
+                 <div class="code-block">
+                     <button class="copy-button" onclick="copyToClipboard(this, 'npm install')">복사</button>
+npm install
+                 </div>
+
+                 <h3>4단계: 프로젝트 빌드</h3>
+                 <div class="code-block">
+                     <button class="copy-button" onclick="copyToClipboard(this, 'npm run build')">복사</button>
+npm run build
+                 </div>
+
+                 <h3>5단계: 명령어 생성</h3>
+                 <div class="code-block">
+                     <button class="copy-button" onclick="copyToClipboard(this, 'npm run generate-commands')">복사</button>
+npm run generate-commands
+                 </div>
+
+                 <h3>6단계: 글로벌 설치</h3>
+                 <div class="code-block">
+                     <button class="copy-button" onclick="copyToClipboard(this, 'npm install -g .')">복사</button>
+npm install -g .
+                 </div>
+
+                <h3>7단계: MCP 서버 등록</h3>
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('user')">사용자 레벨</button>
+                    <button class="tab" onclick="showTab('workspace')">워크스페이스 레벨</button>
+                </div>
+
+                                 <div id="user" class="tab-content active">
+                     <h4>Windows (PowerShell)</h4>
+                     <div class="code-block">
+                         <button class="copy-button" onclick="copyToClipboard(this, 'claude mcp add gemini-mcp -s user -- node $PWD/dist/index.js')">복사</button>
+claude mcp add gemini-mcp -s user -- node $PWD/dist/index.js
+                     </div>
+                     
+                     <h4>Windows (CMD)</h4>
+                     <div class="code-block">
+                         <button class="copy-button" onclick="copyToClipboard(this, 'claude mcp add gemini-mcp -s user -- node [설치경로]/dist/index.js')">복사</button>
+claude mcp add gemini-mcp -s user -- node [설치경로]/dist/index.js
+                     </div>
+                     
+                     <h4>macOS/Linux</h4>
+                     <div class="code-block">
+                         <button class="copy-button" onclick="copyToClipboard(this, 'claude mcp add gemini-mcp -s user -- node $(pwd)/dist/index.js')">복사</button>
+claude mcp add gemini-mcp -s user -- node $(pwd)/dist/index.js
+                     </div>
+                 </div>
+
+                 <div id="workspace" class="tab-content">
+                     <h4>Windows (PowerShell)</h4>
+                     <div class="code-block">
+                         <button class="copy-button" onclick="copyToClipboard(this, 'claude mcp add gemini-mcp -s workspace -- node $PWD/dist/index.js')">복사</button>
+claude mcp add gemini-mcp -s workspace -- node $PWD/dist/index.js
+                     </div>
+                     
+                     <h4>Windows (CMD)</h4>
+                     <div class="code-block">
+                         <button class="copy-button" onclick="copyToClipboard(this, 'claude mcp add gemini-mcp -s workspace -- node [설치경로]/dist/index.js')">복사</button>
+claude mcp add gemini-mcp -s workspace -- node [설치경로]/dist/index.js
+                     </div>
+                     
+                     <h4>macOS/Linux</h4>
+                     <div class="code-block">
+                         <button class="copy-button" onclick="copyToClipboard(this, 'claude mcp add gemini-mcp -s workspace -- node $(pwd)/dist/index.js')">복사</button>
+claude mcp add gemini-mcp -s workspace -- node $(pwd)/dist/index.js
+                     </div>
+                 </div>
+            </div>
+
+            <div class="section">
+                <h2>✨ 주요 기능</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>🤖 Gemini CLI 연동</h4>
+                        <p>Google의 Gemini AI와 완벽하게 연동되어 강력한 AI 기능을 제공합니다.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>📊 실시간 출력</h4>
+                        <p>명령어 실행 결과를 실시간으로 확인할 수 있어 즉시 피드백을 받을 수 있습니다.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>📁 파일 분석</h4>
+                        <p>@filename 구문을 사용하여 파일을 직접 분석하고 코드 리뷰를 받을 수 있습니다.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🏖️ 샌드박스 모드</h4>
+                        <p>안전한 환경에서 코드를 실행하고 테스트할 수 있습니다.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🎯 모델 선택</h4>
+                        <p>다양한 Gemini 모델 중에서 선택하여 사용할 수 있습니다.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🌍 글로벌 설치</h4>
+                        <p>시스템 전체에서 사용할 수 있도록 글로벌 설치를 지원합니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>💡 사용 예시</h2>
+                
+                                 <h3>기본 사용법</h3>
+                 <h4>간단한 질문</h4>
+                 <div class="code-block">
+                     <button class="copy-button" onclick="copyToClipboard(this, '/gc-ask JavaScript에서 배열을 정렬하는 방법을 알려줘')">복사</button>
+/gc-ask "JavaScript에서 배열을 정렬하는 방법을 알려줘"
+                 </div>
+
+                 <h4>파일 분석</h4>
+                 <div class="code-block">
+                     <button class="copy-button" onclick="copyToClipboard(this, '/gc-ask 이 파일의 의존성을 분석해줘: @package.json')">복사</button>
+/gc-ask "이 파일의 의존성을 분석해줘: @package.json"
+                 </div>
+
+                 <h4>코드 리뷰</h4>
+                 <div class="code-block">
+                     <button class="copy-button" onclick="copyToClipboard(this, '/gc-ask 이 코드를 리뷰하고 개선점을 제안해줘: @src/index.ts')">복사</button>
+/gc-ask "이 코드를 리뷰하고 개선점을 제안해줘: @src/index.ts"
+                 </div>
+
+                 <h4>문서 생성</h4>
+                 <div class="code-block">
+                     <button class="copy-button" onclick="copyToClipboard(this, '/gc-ask 이 파일을 기반으로 API 문서를 생성해줘: @README.md')">복사</button>
+/gc-ask "이 파일을 기반으로 API 문서를 생성해줘: @README.md"
+                 </div>
+
+                 <h3>고급 사용법</h3>
+                 <h4>샌드박스 모드</h4>
+                 <div class="code-block">
+                     <button class="copy-button" onclick="copyToClipboard(this, '/gc-ask 샌드박스 모드에서 Python으로 간단한 웹 서버를 만들어줘 --sandbox')">복사</button>
+/gc-ask "샌드박스 모드에서 Python으로 간단한 웹 서버를 만들어줘" --sandbox
+                 </div>
+
+                 <h4>모델 선택</h4>
+                 <div class="code-block">
+                     <button class="copy-button" onclick="copyToClipboard(this, '/gc-ask 복잡한 알고리즘을 설명해줘 --model gemini-2.0-flash-exp')">복사</button>
+/gc-ask "복잡한 알고리즘을 설명해줘" --model "gemini-2.0-flash-exp"
+                 </div>
+
+                 <h4>유틸리티 명령어</h4>
+                 <div class="code-block">
+                     <button class="copy-button" onclick="copyToClipboard(this, '/gc-ping 테스트 메시지')">복사</button>
+# 서버 상태 확인
+/gc-ping "테스트 메시지"
+
+# 도움말 보기
+/gc-help
+                 </div>
+            </div>
+
+            <div class="section">
+                <h2>🔧 문제 해결</h2>
+                
+                                 <h3>Gemini CLI 설치 문제</h3>
+                 <div class="warning">
+                     <strong>⚠️ 주의:</strong> Gemini CLI가 설치되어 있지 않으면 MCP 서버가 작동하지 않습니다.
+                 </div>
+                 <div class="code-block">
+                     <button class="copy-button" onclick="copyToClipboard(this, 'npm install -g @google/generative-ai')">복사</button>
+npm install -g @google/generative-ai
+                 </div>
+
+                 <h3>MCP 서버 연결 실패</h3>
+                 <div class="code-block">
+                     <button class="copy-button" onclick="copyToClipboard(this, 'claude mcp list')">복사</button>
+# MCP 서버 상태 확인
+claude mcp list
+
+# 서버 재등록
+claude mcp remove gemini-mcp
+claude mcp add gemini-mcp -s user -- node [경로]/dist/index.js
+                 </div>
+
+                 <h3>Windows 특별 문제</h3>
+                 <div class="code-block">
+                     <button class="copy-button" onclick="copyToClipboard(this, 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser')">복사</button>
+# PowerShell에서 실행 정책 변경
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# CMD에서 절대 경로 사용
+claude mcp add gemini-mcp -s user -- "C:\Users\%USERNAME%\AppData\Roaming\npm\gemini-mcp.cmd"
+                 </div>
+
+                 <h3>npm install 에러</h3>
+                 <div class="code-block">
+                     <button class="copy-button" onclick="copyToClipboard(this, 'npm cache clean --force')">복사</button>
+# 캐시 정리
+npm cache clean --force
+
+# node_modules 삭제 후 재설치
+rm -rf node_modules package-lock.json
+npm install
+                 </div>
+            </div>
+
+            <div class="section">
+                <h2>🏗️ 개발 가이드</h2>
+                
+                <h3>프로젝트 구조</h3>
+                <div class="code-block">
+Gemini_Mcp/
+├── src/
+│   ├── index.ts          # 메인 진입점
+│   ├── constants.ts      # 상수 정의
+│   ├── tools/           # 도구 모듈
+│   └── utils/           # 유틸리티
+├── dist/                # 빌드 결과물
+├── package.json         # 프로젝트 설정
+└── README.md           # 문서
+                </div>
+
+                <h3>개발 명령어</h3>
+                <div class="code-block">
+# 개발 모드 실행
+npm run dev
+
+# 빌드
+npm run build
+
+# 타입 체크
+npm run type-check
+
+# 테스트
+npm test
+                </div>
+
+                <div class="success">
+                    <strong>✅ 성공:</strong> 모든 설정이 완료되었습니다! Claude Desktop에서 Gemini MCP 서버를 사용할 수 있습니다.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // 모든 탭 콘텐츠 숨기기
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // 모든 탭 버튼 비활성화
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // 선택된 탭 콘텐츠 표시
+            document.getElementById(tabName).classList.add('active');
+            
+            // 선택된 탭 버튼 활성화
+            event.target.classList.add('active');
+        }
+
+        function copyToClipboard(button, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // 복사 성공 시 버튼 텍스트 변경
+                const originalText = button.textContent;
+                button.textContent = '복사됨!';
+                button.classList.add('copied');
+                
+                // 2초 후 원래 텍스트로 복원
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('클립보드 복사 실패:', err);
+                alert('클립보드 복사에 실패했습니다.');
+            });
+        }
+
+        // 스크롤 애니메이션
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'all 0.6s ease-out';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html> 
