@@ -36,8 +36,10 @@ cd Gemini_Mcp
 npm install && npm run build && npm run generate-commands && npm install -g .
 
 # MCP 서버 등록 (사용자 레벨)
-# Windows용:
-claude mcp add gemini-mcp -s user -- node dist/index.js
+# Windows용: 파워쉘 
+claude mcp add gemini-mcp -s user -- node $PWD/dist/index.js
+# Windows용: CMD
+claude mcp addgemini-mcp -s user -- node [설치경로로]/dist/index.js
 # macOS/Linux용:
 claude mcp add gemini-mcp -s user -- node $(pwd)/dist/index.js
 ```
